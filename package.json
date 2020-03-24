@@ -1,0 +1,20 @@
+{
+  "name": "qotd-server",
+  "version": "1.0.0",
+  "main": "functions/server.js",
+  "author": "Joseph Weissman <joseph@cypress.io>",
+  "license": "MIT",
+  "scripts": {
+    "build": "netlify-lambda build express",
+    "serve": "netlify-lambda serve -s functions"
+  },
+  "devDependencies": {
+    "netlify": "^3.1.0",
+    "netlify-lambda": "^1.6.3"
+  },
+  "dependencies": {
+    "axios": "^0.19.2",
+    "express": "^4.17.1",
+    "serverless-http": "^2.3.2"
+  }
+}
