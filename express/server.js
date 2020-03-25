@@ -6,13 +6,14 @@ const app = express();
 const bodyParser = require('body-parser');
 
 const axios = require('axios');
+const cors = require('cors');
 
 const baseUrl = process.env.DARK_SKY_URL || 'https://api.darksky.net'
 const apiKey = process.env.API_KEY || '[[..FILL..IN..API_KEY..]]'
 
 async function forecast(lat, lon) {
   let weatherReport = `${baseUrl}/forecast/${apiKey}/${lat},${lon}`;
-  console.log(`---> GET WEATHER at ${lat}, $${lon}`)
+  console.log(`---> GET WEATHER at (lat: ${lat}, long: ${lon})`)
   console.log(`...wait for report from ${weatherReport}`)
   let report = await axios.get(weatherReport);
   return report;
@@ -33,36 +34,22 @@ router.get('/', (req, res) => {
   res.end();
 });
 router.get('/weather/forecast', async (req, res) => { 
+  console.log("WEATHER PREDICTOR: " + req.query.geo)
   let elements = req.query.geo.split(',')
+  console.log(" ----> elements of geo: " + elements)
   let [lat, lon] = elements
-  res.json({
-    ...(await lookOutside(Number(lat), Number(lon))),
-    params: { latitude: Number(lat), longitude: Number(lon) }
-  })
-  return { statusCode: 200, body: {} }
+  let latitude = Number(lat)
+  let longitude = Number(lon)
+  let report = await lookOutside(latitude, longitude)
+  console.log(" ----> got report: " + JSON.stringify(report))
+  res.json({ ...report, params: { latitude, longitude }})
+  // return { statusCode: 200, body: report }
 });
 router.post('/', (req, res) => res.json({ postBody: req.body }));
 
+app.use(cors());
 app.use(bodyParser.json());
 app.use('/.netlify/functions/server', router);  // path must route to lambda
 app.use('/', (req, res) => res.sendFile(path.join(__dirname, '../index.html')));
-
-
-// const express = require('express');
-// const serverless = require('serverless-http');
-// const app = express();
-// const bodyParser = require('body-parser');
-
-// async function lookOutside(lat, lon) {
-//   return { summary: `hello from qotd-server (you are at ${lat}, ${lon})` };
-// }
-
-// app.use(bodyParser);
-// app.post('/forecast', (req, res) => {
-//     let latitude = req.params['lat']
-//     let longitude = req.params['lon']
-//     const newValue = await lookOutside(latitude, longitude);
-//     res.json(newValue);
-// });
 
 module.exports.handler = serverless(app);
