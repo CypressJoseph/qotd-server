@@ -30,7 +30,7 @@ const router = express.Router();
 router.get('/', (req, res) => {
   res.writeHead(200, { 'Content-Type': 'text/html' });
   res.write('<h1>Hello from qotd-server!</h1>');
-  res.write('<p>API is just <code>/weather/forecast?[lat],[lon]</code></p>');
+  res.write('<p>API is just <code>/weather/forecast?geo=[lat],[lon]</code></p>');
   res.end();
 });
 router.get('/weather/forecast', async (req, res) => { 
