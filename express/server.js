@@ -7,6 +7,11 @@ const bodyParser = require('body-parser');
 
 const axios = require('axios');
 const cors = require('cors');
+const apicache = require('apicache')
+let cache = apicache.middleware
+ 
+app.use(cache('5 minutes'))
+
 
 const baseUrl = process.env.DARK_SKY_URL || 'https://api.darksky.net'
 const apiKey = process.env.API_KEY || '[[..FILL..IN..API_KEY..]]'
