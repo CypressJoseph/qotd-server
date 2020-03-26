@@ -39,6 +39,7 @@ router.get('/', (req, res) => {
   res.end();
 });
 router.get('/weather/forecast', async (req, res) => { 
+  req.apicacheGroup = req.quero.geo
   console.log("WEATHER PREDICTOR: " + req.query.geo)
   let elements = req.query.geo.split(',')
   console.log(" ----> elements of geo: " + elements)
